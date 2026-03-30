@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<video width="400" controls>
+  <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+  Your browser does not support HTML video.
+</video>
+
+<p>
+Video courtesy of
+<a href="https://www.bigbuckbunny.org/" target="_blank">Big Buck Bunny</a>.
+</p>
+
+</body>
+</html>
