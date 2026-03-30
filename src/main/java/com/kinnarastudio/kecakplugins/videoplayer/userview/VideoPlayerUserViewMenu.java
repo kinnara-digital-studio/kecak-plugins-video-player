@@ -32,7 +32,9 @@ public class VideoPlayerUserViewMenu extends UserviewMenu implements PluginWebSu
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("className", getClassName());
 
+        String url = getPropertyString("urlField");
 
+        dataModel.put("urlField", url);
 
         return pluginManager.getPluginFreeMarkerTemplate(dataModel, getClassName(), "/templates/VideoPlayerUserViewMenu.ftl",
                 null);

@@ -22,32 +22,11 @@
         "value": "My Menu"
       },
       {
-        "name": "options",
-        "label": "Options",
-        "type": "grid",
-        "columns": [
-          {
-            "key": "value",
-            "label": "Value"
-          },
-          {
-            "key": "label",
-            "label": "Label"
-          }
-        ]
-      },
-      {
-        "name": "dataListId",
-        "label": "DataList",
-        "type": "selectbox",
+        "name": "urlField",
+        "label": "URL Field",
+        "type": "textfield",
         "required": "true",
-        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/datalist/options"
-      },
-      {
-        "name": "formId",
-        "label": "Form",
-        "type": "selectbox",
-        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/forms/options"
+        "value": "url"
       }
     ]
   }
