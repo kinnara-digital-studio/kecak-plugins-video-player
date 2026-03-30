@@ -2,13 +2,20 @@ package com.kinnarastudio.kecakplugins.videoplayer.userview;
 
 import org.joget.apps.app.service.AppUtil;
 import org.joget.apps.userview.model.UserviewMenu;
+import org.joget.commons.util.LogUtil;
 import org.joget.plugin.base.PluginManager;
 import org.joget.plugin.base.PluginWebSupport;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -36,7 +43,8 @@ public class VideoPlayerUserViewMenu extends UserviewMenu implements PluginWebSu
 
         dataModel.put("urlField", url);
 
-        return pluginManager.getPluginFreeMarkerTemplate(dataModel, getClassName(), "/templates/VideoPlayerUserViewMenu.ftl",
+        return pluginManager.getPluginFreeMarkerTemplate(dataModel, getClassName(),
+                "/templates/VideoPlayerUserViewMenu.ftl",
                 null);
     }
 
@@ -69,8 +77,34 @@ public class VideoPlayerUserViewMenu extends UserviewMenu implements PluginWebSu
     }
 
     @Override
-    public void webService(javax.servlet.http.HttpServletRequest httpServletRequest, javax.servlet.http.HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    public void webService(javax.servlet.http.HttpServletRequest httpServletRequest,
+            javax.servlet.http.HttpServletResponse httpServletResponse) throws ServletException, IOException {
+        String videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
+        try {
+            URL url = new URL(videoUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            httpServletResponse.setContentType("video/mp4");
+            httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"video.mp4\"");
+
+            try (InputStream inputStream = connection.getInputStream();
+                    OutputStream outputStream = httpServletResponse.getOutputStream()) {
+                byte[] bytes = new byte[16384];
+                int bytesRead;
+
+                while ((bytesRead = inputStream.read(bytes)) >= 0) {
+                    outputStream.write(bytes, 0, bytesRead);
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.error(getClassName(), e, "Error streaming video from URL: " + videoUrl);
+            if (!httpServletResponse.isCommitted()) {
+                httpServletResponse.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "Error streaming video");
+            }
+        }
     }
 
     @Override
